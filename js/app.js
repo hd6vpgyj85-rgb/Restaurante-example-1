@@ -1,8 +1,12 @@
 import { CONFIG } from './config.js';
 import { supabaseClient } from './supabase.js';
 
-const yearEl = document.getElementById('year');
-if (yearEl) yearEl.textContent = new Date().getFullYear();
+const currentYear = new Date().getFullYear();
+document.querySelectorAll('#year, .menu-footer-year').forEach((el) => {
+  el.textContent = currentYear;
+});
+
+const CATEGORIES = ['Entradas', 'Filetes', 'Mariscos', 'Bebidas', 'Postres'];
 
 initNav();
 initReservationForm();
@@ -133,9 +137,77 @@ async function loadGallery() {
         </div>
       `)
       .join('');
+
+    startGalleryAutoScroll(track.parentElement, track);
   } catch (err) {
     track.parentElement.classList.add('hidden');
   }
+}
+
+function startGalleryAutoScroll(wrapper, track) {
+  const SPEED = 0.5;
+  let paused = false;
+  let resumeTimer;
+
+  const step = () => {
+    if (!paused) {
+      const halfWidth = track.scrollWidth / 2;
+      wrapper.scrollLeft += SPEED;
+      if (wrapper.scrollLeft >= halfWidth) {
+        wrapper.scrollLeft -= halfWidth;
+      }
+    }
+    requestAnimationFrame(step);
+  };
+
+  const pause = () => {
+    paused = true;
+    clearTimeout(resumeTimer);
+  };
+
+  const scheduleResume = () => {
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(() => {
+      paused = false;
+    }, 2500);
+  };
+
+  wrapper.addEventListener('touchstart', pause, { passive: true });
+  wrapper.addEventListener('touchend', scheduleResume);
+  wrapper.addEventListener('wheel', () => {
+    pause();
+    scheduleResume();
+  }, { passive: true });
+
+  // Arrastrar con el mouse para desplazar manualmente en escritorio
+  // (el touch nativo ya funciona en móvil gracias a overflow-x: auto).
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragStartScrollLeft = 0;
+
+  wrapper.addEventListener('dragstart', (e) => e.preventDefault());
+
+  wrapper.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    pause();
+    dragStartX = e.pageX;
+    dragStartScrollLeft = wrapper.scrollLeft;
+    wrapper.classList.add('dragging');
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    wrapper.scrollLeft = dragStartScrollLeft - (e.pageX - dragStartX);
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    wrapper.classList.remove('dragging');
+    scheduleResume();
+  });
+
+  requestAnimationFrame(step);
 }
 
 async function loadPromociones() {
@@ -179,7 +251,6 @@ const menuState = {
   items: [],
   lang: 'es',
   currency: 'MXN',
-  category: 'Entradas',
 };
 
 function initMenuOverlay() {
@@ -193,25 +264,30 @@ function initMenuOverlay() {
   const closeBtn = document.getElementById('menu-close');
   const langToggle = document.getElementById('lang-toggle');
   const currencyToggle = document.getElementById('currency-toggle');
-  const categoryButtons = document.querySelectorAll('.category-btn');
+  const ctaReserveBtn = document.getElementById('menu-cta-reserve');
+  const footerLinks = overlay.querySelectorAll('.menu-footer-link');
 
-  openBtns.forEach((btn) => {
-    btn.addEventListener('click', async () => {
-      overlay.classList.remove('hidden');
-      overlay.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-      if (menuState.items.length === 0) {
-        await loadMenuItems();
-      }
-      renderMenuItems();
-    });
-  });
+  const openMenu = async () => {
+    overlay.classList.remove('hidden');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if (menuState.items.length === 0) {
+      await loadMenuItems();
+    }
+    renderMenuItems();
+  };
 
-  closeBtn.addEventListener('click', () => {
+  const closeMenu = () => {
     overlay.classList.add('hidden');
     overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+  };
+
+  openBtns.forEach((btn) => {
+    btn.addEventListener('click', openMenu);
   });
+
+  closeBtn.addEventListener('click', closeMenu);
 
   langToggle.addEventListener('click', () => {
     menuState.lang = menuState.lang === 'es' ? 'en' : 'es';
@@ -227,13 +303,13 @@ function initMenuOverlay() {
     renderMenuItems();
   });
 
-  categoryButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      categoryButtons.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-      menuState.category = btn.dataset.category;
-      renderMenuItems();
-    });
+  ctaReserveBtn.addEventListener('click', () => {
+    closeMenu();
+    document.getElementById('reservar').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  footerLinks.forEach((link) => {
+    link.addEventListener('click', closeMenu);
   });
 }
 
@@ -253,29 +329,40 @@ function renderMenuItems() {
   const grid = document.getElementById('menu-items-grid');
   if (!grid) return;
 
-  const filtered = menuState.items.filter((item) => item.categoria === menuState.category);
-
-  if (filtered.length === 0) {
-    grid.innerHTML = '<p class="empty-state">No hay platillos en esta categoría.</p>';
+  if (menuState.items.length === 0) {
+    grid.innerHTML = '<p class="empty-state">El menú no está disponible por el momento.</p>';
     return;
   }
 
-  grid.innerHTML = filtered
-    .map((item) => {
-      const nombre = menuState.lang === 'es' ? item.nombre_es : item.nombre_en;
-      const precio = formatPrice(item.precio_mxn, menuState.currency);
-      return `
-        <a class="menu-item-card" href="menu-item.html?id=${item.id}">
-          ${item.imagen_url ? `<img src="${item.imagen_url}" alt="${escapeHtml(nombre)}" loading="lazy">` : ''}
-          <div class="menu-item-card-body">
-            <h4>${escapeHtml(nombre)}</h4>
-            <p>${escapeHtml(item.descripcion || '')}</p>
-            <span class="menu-item-price">${precio}</span>
-          </div>
-        </a>
-      `;
-    })
-    .join('');
+  const blocks = CATEGORIES.map((category) => {
+    const items = menuState.items.filter((item) => item.categoria === category);
+    if (items.length === 0) return '';
+
+    const rows = items
+      .map((item) => {
+        const nombre = menuState.lang === 'es' ? item.nombre_es : item.nombre_en;
+        const precio = formatPrice(item.precio_mxn, menuState.currency);
+        return `
+          <a class="menu-list-item" href="menu-item.html?id=${item.id}">
+            <div class="menu-list-item-row">
+              <h4>${escapeHtml(nombre)}</h4>
+              <span class="menu-list-item-price">${precio}</span>
+            </div>
+            ${item.descripcion ? `<p class="menu-list-item-desc">${escapeHtml(item.descripcion)}</p>` : ''}
+          </a>
+        `;
+      })
+      .join('');
+
+    return `
+      <div class="menu-category-block">
+        <h3 class="menu-category-title">${category}</h3>
+        ${rows}
+      </div>
+    `;
+  }).join('');
+
+  grid.innerHTML = blocks || '<p class="empty-state">El menú no está disponible por el momento.</p>';
 }
 
 function formatPrice(priceMxn, currency) {

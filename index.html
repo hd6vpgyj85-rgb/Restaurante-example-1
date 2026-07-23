@@ -127,21 +127,44 @@
 
 <div class="menu-overlay hidden" id="menu-overlay" aria-hidden="true">
   <div class="menu-header">
-    <h2>Menú</h2>
+    <div class="nav-brand">Obsidiana</div>
     <div class="menu-controls">
       <button class="toggle-btn" id="lang-toggle">EN</button>
       <button class="toggle-btn" id="currency-toggle">USD</button>
-      <button class="close-btn" id="menu-close" aria-label="Cerrar menú"><i class="fa-solid fa-xmark"></i></button>
+      <button class="close-btn" id="menu-close" aria-label="Cerrar menú">&times;</button>
     </div>
   </div>
-  <div class="menu-categories" id="menu-categories">
-    <button class="category-btn active" data-category="Entradas">Entradas</button>
-    <button class="category-btn" data-category="Filetes">Filetes</button>
-    <button class="category-btn" data-category="Mariscos">Mariscos</button>
-    <button class="category-btn" data-category="Bebidas">Bebidas</button>
-    <button class="category-btn" data-category="Postres">Postres</button>
+
+  <div class="menu-hero">
+    <h2>Nuestro Menú</h2>
+    <p>Cocina de autor, ingredientes de temporada.</p>
   </div>
+
   <div class="menu-items-grid" id="menu-items-grid"></div>
+
+  <div class="menu-cta">
+    <h3>¿Le apetece probarlo?</h3>
+    <p>Reserve su mesa y descubra la carta completa en persona.</p>
+    <button id="menu-cta-reserve" class="btn btn-solid">Reservar Mesa</button>
+  </div>
+
+  <footer class="footer menu-footer">
+    <p class="menu-footer-brand">Obsidiana</p>
+    <p class="menu-footer-tagline">Sabores que se quedan en la memoria</p>
+    <nav class="menu-footer-links">
+      <a href="#inicio" class="menu-footer-link">Inicio</a>
+      <a href="#reservar" class="menu-footer-link">Reservar</a>
+      <a href="#ubicacion" class="menu-footer-link">Ubicación</a>
+      <a href="#galeria" class="menu-footer-link">Galería</a>
+    </nav>
+    <div class="social-row menu-footer-social">
+      <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+      <a href="https://tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+      <a href="https://x.com/" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+    </div>
+    <p>&copy; <span class="menu-footer-year"></span> Obsidiana. Todos los derechos reservados.</p>
+  </footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
