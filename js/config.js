@@ -12,9 +12,9 @@ export const CONFIG = {
 
   // --- EmailJS ---
   // https://dashboard.emailjs.com
-  EMAILJS_SERVICE_ID: 'REEMPLAZAR_EMAILJS_SERVICE_ID',
-  EMAILJS_TEMPLATE_ID: 'REEMPLAZAR_EMAILJS_TEMPLATE_ID',
-  EMAILJS_PUBLIC_KEY: 'REEMPLAZAR_EMAILJS_PUBLIC_KEY',
+  EMAILJS_SERVICE_ID: 'service_4tn5qjm',
+  EMAILJS_TEMPLATE_ID: 'template_gkolv08',
+  EMAILJS_PUBLIC_KEY: '2SViSR4Kx7g5xRFsN',
 
   // --- Cloudinary ---
   // Necesitas un "unsigned upload preset" creado en tu cuenta de Cloudinary
