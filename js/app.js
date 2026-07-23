@@ -27,6 +27,12 @@ function initNav() {
     nav.classList.toggle('scrolled', window.scrollY > 20);
   });
 
+  if (links) {
+    links.querySelectorAll('.nav-link-item').forEach((el, i) => {
+      el.style.setProperty('--stagger-index', i);
+    });
+  }
+
   if (toggle && links) {
     toggle.addEventListener('click', () => links.classList.add('open'));
   }
