@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Administración — Obsidiana</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<div class="admin-layout" id="admin-dashboard">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-brand">Obsidiana Admin</div>
+    <button class="admin-nav-btn active" data-section="menu">Menú</button>
+    <button class="admin-nav-btn" data-section="galeria">Galería</button>
+    <button class="admin-nav-btn" data-section="promociones">Promociones</button>
+    <button class="admin-nav-btn" data-section="empleados">Empleados</button>
+    <button class="admin-nav-btn" data-section="reservaciones">Reservaciones</button>
+    <button class="admin-logout-btn" id="logout-btn">Cerrar sesión</button>
+  </aside>
+
+  <main class="admin-main">
+
+    <section class="admin-section" id="section-menu">
+      <div class="admin-section-title">
+        <h2>Menú</h2>
+        <button class="btn btn-solid" id="add-menu-item-btn">+ Nuevo Platillo</button>
+      </div>
+      <div id="menu-items-list"><p class="empty-state">Cargando…</p></div>
+    </section>
+
+    <section class="admin-section hidden" id="section-galeria">
+      <div class="admin-section-title">
+        <h2>Galería</h2>
+        <button class="btn btn-solid" id="add-galeria-btn">+ Nueva Imagen</button>
+      </div>
+      <div class="admin-card-grid" id="galeria-list"><p class="empty-state">Cargando…</p></div>
+    </section>
+
+    <section class="admin-section hidden" id="section-promociones">
+      <div class="admin-section-title">
+        <h2>Promociones</h2>
+        <button class="btn btn-solid" id="add-promocion-btn">+ Nueva Promoción</button>
+      </div>
+      <div class="admin-card-grid" id="promociones-list"><p class="empty-state">Cargando…</p></div>
+    </section>
+
+    <section class="admin-section hidden" id="section-empleados">
+      <div class="admin-section-title">
+        <h2>Empleados</h2>
+        <button class="btn btn-solid" id="add-empleado-btn">+ Nuevo Empleado</button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Puesto</th>
+              <th>Horario</th>
+              <th>Paga mensual</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="empleados-list">
+            <tr><td colspan="5" class="empty-state">Cargando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="admin-section hidden" id="section-reservaciones">
+      <div class="admin-section-title">
+        <h2>Reservaciones</h2>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Personas</th>
+              <th>Teléfono</th>
+            </tr>
+          </thead>
+          <tbody id="reservaciones-list">
+            <tr><td colspan="5" class="empty-state">Cargando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal-box" id="modal-box"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script type="module" src="../js/admin.js"></script>
+</body>
+</html>
