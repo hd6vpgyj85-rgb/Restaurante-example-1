@@ -24,7 +24,7 @@ export const CONFIG = {
 
   // --- WhatsApp ---
   // Formato internacional, solo dígitos, sin "+" ni espacios (ej: 5215512345678)
-  WHATSAPP_NUMBER: 'REEMPLAZAR_WHATSAPP_NUMBER',
+  WHATSAPP_NUMBER: '526568596503',
 
   // --- Tipo de cambio fijo MXN -> USD ---
   EXCHANGE_RATE_MXN_USD: 16,
