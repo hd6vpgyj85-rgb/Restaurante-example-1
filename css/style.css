@@ -170,15 +170,29 @@ h1, h2, h3 {
 }
 
 .nav-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.hamburger-bar {
   display: block;
-  font-size: 1.4rem;
-  color: var(--color-white);
+  width: 22px;
+  height: 2px;
+  background: var(--color-white);
+  border-radius: 1px;
 }
 
 .nav-links {
   position: fixed;
   top: 0;
-  right: -100%;
+  right: 0;
+  transform: translateX(100%);
   height: 100vh;
   width: 78%;
   max-width: 320px;
@@ -187,12 +201,13 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  transition: right var(--transition);
+  transition: transform var(--transition);
   border-left: 1px solid var(--color-border);
+  z-index: 101;
 }
 
 .nav-links.open {
-  right: 0;
+  transform: translateX(0);
 }
 
 .nav-links a,
@@ -211,7 +226,13 @@ h1, h2, h3 {
   position: absolute;
   top: var(--space-2);
   right: var(--space-3);
-  font-size: 1.4rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  line-height: 1;
 }
 
 @media (min-width: 900px) {
@@ -646,6 +667,20 @@ h1, h2, h3 {
   color: var(--color-white-dim);
   font-size: 0.85rem;
   border-top: 1px solid var(--color-border);
+}
+
+.footer p + p {
+  margin-top: 0.6rem;
+}
+
+.footer-admin-link {
+  color: var(--color-white-dim);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.footer-admin-link:hover {
+  color: var(--color-gold);
 }
 
 /* ----- Menu item page ----- */

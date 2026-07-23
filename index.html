@@ -13,10 +13,12 @@
 <nav class="nav" id="nav">
   <div class="nav-brand">Obsidiana</div>
   <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú de navegación">
-    <i class="fa-solid fa-bars"></i>
+    <span class="hamburger-bar"></span>
+    <span class="hamburger-bar"></span>
+    <span class="hamburger-bar"></span>
   </button>
   <div class="nav-links" id="nav-links">
-    <button class="nav-close" id="nav-close" aria-label="Cerrar navegación"><i class="fa-solid fa-xmark"></i></button>
+    <button class="nav-close" id="nav-close" aria-label="Cerrar navegación">&times;</button>
     <a href="#reservar">Reservar</a>
     <a href="#ubicacion">Ubicación</a>
     <a href="#galeria">Galería</a>
@@ -119,7 +121,8 @@
 </section>
 
 <footer class="footer">
-  &copy; <span id="year"></span> Obsidiana. Todos los derechos reservados.
+  <p>&copy; <span id="year"></span> Obsidiana. Todos los derechos reservados.</p>
+  <p><a href="admin/index.html" class="footer-admin-link">Panel de administración</a></p>
 </footer>
 
 <div class="menu-overlay hidden" id="menu-overlay" aria-hidden="true">

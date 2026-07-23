@@ -109,54 +109,70 @@ function initReservationForm() {
 
 async function loadGallery() {
   const track = document.getElementById('gallery-track');
-  if (!track) return;
-
-  const { data, error } = await supabaseClient
-    .from('galeria')
-    .select('*')
-    .order('orden', { ascending: true });
-
-  if (error || !data || data.length === 0) {
-    track.parentElement.classList.add('hidden');
+  if (!track || !supabaseClient) {
+    if (track) track.parentElement.classList.add('hidden');
     return;
   }
 
-  const items = [...data, ...data];
-  track.innerHTML = items
-    .map((item) => `
-      <div class="gallery-card">
-        <img src="${item.imagen_url}" alt="Imagen de la galería de Obsidiana" loading="lazy">
-      </div>
-    `)
-    .join('');
+  try {
+    const { data, error } = await supabaseClient
+      .from('galeria')
+      .select('*')
+      .order('orden', { ascending: true });
+
+    if (error || !data || data.length === 0) {
+      track.parentElement.classList.add('hidden');
+      return;
+    }
+
+    const items = [...data, ...data];
+    track.innerHTML = items
+      .map((item) => `
+        <div class="gallery-card">
+          <img src="${item.imagen_url}" alt="Imagen de la galería de Obsidiana" loading="lazy">
+        </div>
+      `)
+      .join('');
+  } catch (err) {
+    track.parentElement.classList.add('hidden');
+  }
 }
 
 async function loadPromociones() {
   const grid = document.getElementById('promo-grid');
   if (!grid) return;
 
-  const { data, error } = await supabaseClient
-    .from('promociones')
-    .select('*')
-    .eq('activa', true)
-    .order('creado_en', { ascending: false });
-
-  if (error || !data || data.length === 0) {
+  if (!supabaseClient) {
     grid.innerHTML = '<p class="empty-state">No hay promociones activas por el momento.</p>';
     return;
   }
 
-  grid.innerHTML = data
-    .map((promo) => `
-      <div class="promo-card">
-        ${promo.imagen_url ? `<img src="${promo.imagen_url}" alt="${escapeHtml(promo.titulo)}" loading="lazy">` : ''}
-        <div class="promo-card-body">
-          <h3>${escapeHtml(promo.titulo)}</h3>
-          <p>${escapeHtml(promo.descripcion || '')}</p>
+  try {
+    const { data, error } = await supabaseClient
+      .from('promociones')
+      .select('*')
+      .eq('activa', true)
+      .order('creado_en', { ascending: false });
+
+    if (error || !data || data.length === 0) {
+      grid.innerHTML = '<p class="empty-state">No hay promociones activas por el momento.</p>';
+      return;
+    }
+
+    grid.innerHTML = data
+      .map((promo) => `
+        <div class="promo-card">
+          ${promo.imagen_url ? `<img src="${promo.imagen_url}" alt="${escapeHtml(promo.titulo)}" loading="lazy">` : ''}
+          <div class="promo-card-body">
+            <h3>${escapeHtml(promo.titulo)}</h3>
+            <p>${escapeHtml(promo.descripcion || '')}</p>
+          </div>
         </div>
-      </div>
-    `)
-    .join('');
+      `)
+      .join('');
+  } catch (err) {
+    grid.innerHTML = '<p class="empty-state">No hay promociones activas por el momento.</p>';
+  }
 }
 
 const menuState = {
@@ -222,9 +238,14 @@ function initMenuOverlay() {
 }
 
 async function loadMenuItems() {
-  const { data, error } = await supabaseClient.from('menu_items').select('*');
-  if (!error && data) {
-    menuState.items = data;
+  if (!supabaseClient) return;
+  try {
+    const { data, error } = await supabaseClient.from('menu_items').select('*');
+    if (!error && data) {
+      menuState.items = data;
+    }
+  } catch (err) {
+    // El menú se mostrará vacío; renderMenuItems ya maneja la lista vacía.
   }
 }
 
@@ -272,18 +293,25 @@ async function loadMenuItemDetail() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
 
-  if (!id) {
+  if (!id || !supabaseClient) {
     container.innerHTML = '<p class="empty-state">Platillo no encontrado.</p>';
     return;
   }
 
-  const { data, error } = await supabaseClient
-    .from('menu_items')
-    .select('*')
-    .eq('id', id)
-    .single();
+  let data;
+  try {
+    const result = await supabaseClient
+      .from('menu_items')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  if (error || !data) {
+    if (result.error || !result.data) {
+      container.innerHTML = '<p class="empty-state">Platillo no encontrado.</p>';
+      return;
+    }
+    data = result.data;
+  } catch (err) {
     container.innerHTML = '<p class="empty-state">Platillo no encontrado.</p>';
     return;
   }

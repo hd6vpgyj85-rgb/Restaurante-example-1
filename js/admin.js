@@ -22,21 +22,30 @@ function initLogin() {
     const submitBtn = loginForm.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
 
-    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-    submitBtn.disabled = false;
-
-    if (error) {
-      statusEl.textContent = 'Correo o contraseña incorrectos.';
+    try {
+      if (!supabaseClient) throw new Error('No se pudo conectar con el servidor.');
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) {
+        statusEl.textContent = 'Correo o contraseña incorrectos.';
+        statusEl.classList.add('error');
+        return;
+      }
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      statusEl.textContent = 'No se pudo conectar. Intenta de nuevo.';
       statusEl.classList.add('error');
-      return;
+    } finally {
+      submitBtn.disabled = false;
     }
-
-    window.location.href = 'dashboard.html';
   });
 }
 
 async function initDashboard() {
+  if (!supabaseClient) {
+    window.location.href = 'index.html';
+    return;
+  }
+
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) {
     window.location.href = 'index.html';
