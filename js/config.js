@@ -19,7 +19,7 @@ export const CONFIG = {
   // --- Cloudinary ---
   // Necesitas un "unsigned upload preset" creado en tu cuenta de Cloudinary
   // (Settings > Upload > Upload presets > Add upload preset > Signing mode: Unsigned)
-  CLOUDINARY_CLOUD_NAME: 'REEMPLAZAR_CLOUDINARY_CLOUD_NAME',
+  CLOUDINARY_CLOUD_NAME: 'resturantexample1',
   CLOUDINARY_UPLOAD_PRESET: 'REEMPLAZAR_CLOUDINARY_UPLOAD_PRESET',
 
   // --- WhatsApp ---
