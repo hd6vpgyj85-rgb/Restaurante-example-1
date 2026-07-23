@@ -7,8 +7,8 @@
 export const CONFIG = {
   // --- Supabase ---
   // Project Settings > API
-  SUPABASE_URL: 'REEMPLAZAR_SUPABASE_URL', // ej: https://xxxxxxxx.supabase.co
-  SUPABASE_ANON_KEY: 'REEMPLAZAR_SUPABASE_ANON_KEY',
+  SUPABASE_URL: 'https://wkxyjuccjhzoijuxgshh.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndreHlqdWNjamh6b2lqdXhnc2hoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MzczMTcsImV4cCI6MjEwMDQxMzMxN30.Pk7_M8NO3Vhdm455kBrOMBkwCokVC_ulh8DYFtl4xwk',
 
   // --- EmailJS ---
   // https://dashboard.emailjs.com
