@@ -243,6 +243,7 @@ h1, h2, h3 {
 
   .nav-links {
     position: static;
+    transform: none;
     height: auto;
     width: auto;
     max-width: none;
